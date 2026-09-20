@@ -38,8 +38,8 @@ class SpelareRepository : ISpelarRepository
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = @"
+        var command = connection.CreateCommand();    // denna rad
+        command.CommandText = @"   
             CREATE TABLE IF NOT EXISTS spelare (
                 id INTEGER PRIMARY KEY,
                 namn TEXT NOT NULL,
@@ -48,7 +48,7 @@ class SpelareRepository : ISpelarRepository
                 matcher_spelade INTEGER NOT NULL
             );";
 
-        command.ExecuteNonQuery();
+        command.ExecuteNonQuery();// denna rad gö
     }
 
     public void LäggTillSpelare(Spelare spelare)
@@ -69,7 +69,7 @@ class SpelareRepository : ISpelarRepository
         command.ExecuteNonQuery();
     }
 
-    public List<Spelare> HämtaAlla()
+    public List<Spelare> HämtaAlla() // denna hämtar alla spelare från databasen och returnerar en lista med Spelare-objekt syftet är att kunna visa alla spelare i konsolen
     {
         var lista = new List<Spelare>();
 
@@ -230,7 +230,7 @@ class Program
         Console.Write("Id: ");
         int id = LäsHeltal();
 
-        repository.LäggTillSpelare(new Spelare
+        repository.LäggTillSpelare(new Spelare // skapa en ny spelare och lägg till i databasen, repository är allts
         {
             Id = id,
             Namn = namn,
@@ -260,13 +260,13 @@ class Program
     static void SökSpelare()
     {
         Console.Write("Sök namn: ");
-        string namn = Console.ReadLine() ?? string.Empty;
+        string namn = Console.ReadLine() ?? string.Empty;  // string.Empty i detta fall används som en säkerhetsåtgärd för att undvika null-värden. Om användaren inte skriver något namn, kommer namn att vara en tom sträng istället
 
         var spelare = repository.SökSpelare(namn);
         if (spelare == null)
         {
             Console.WriteLine("Spelare hittades inte.");
-            return;
+            return; 
         }
 
         spelare.SkrivInfo();
