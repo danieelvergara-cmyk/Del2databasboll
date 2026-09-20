@@ -26,3 +26,8 @@ dotnet run --project Del2databasboll.csproj
   - `trojnummer`
   - `mal`
   - `matcher_spelade`
+
+## Git och databasen
+- `spelare.db` är en lokal fil och versioneras inte i Git.
+- Filen ignoreras via `.gitignore` (`*.db`).
+- Om filen saknas skapas den automatiskt när appen startar.
