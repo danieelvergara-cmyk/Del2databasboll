@@ -5,12 +5,19 @@ En enkel C#-konsolapp för spelare med SQLite-databas.
 ## Ingår
 - Skapar databasen `spelare.db` automatiskt.
 - Skapar tabellen `spelare` vid första start.
-- CRUD-grund via meny:
+ CRUD via meny:
   - Lägg till spelare
   - Visa alla spelare
   - Sök spelare
   - Ta bort spelare
+  - Uppdatera spelare
 
+## Struktur
+- `Models/` - domänmodeller (`Spelare`)
+- `Repositories/` - databasaccess (SQL)
+- `Services/` - affärslogik mellan Program och Repository
+- `Data/` - initiering/seed av databas
+- `Program.cs` - meny/UI
 ## Kör
 ```bash
 dotnet restore
