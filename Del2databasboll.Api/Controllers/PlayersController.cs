@@ -31,92 +31,79 @@ public class PlayersController : ControllerBase
     [HttpGet("{id:int}")]
     public ActionResult<Spelare> GetById(int id)
     {
-        try
+        var player = _service.HämtaSpelareById(id);
+        if (player == null)
         {
-            var player = _service.HämtaSpelareById(id);
-            if (player == null)
+            return NotFound(new ApiError
             {
-                return NotFound(); // HTTP 404
-            }
+                Code = "not_found",
+                Message = $"Ingen spelare hittades med id {id}.",
+                TraceId = HttpContext.TraceIdentifier
+            }); // HTTP 404
+        }
 
-            return Ok(player); // HTTP 200
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message); // HTTP 400
-        }
+        return Ok(player); // HTTP 200
     }
 
     // POST /api/players
     [HttpPost]
     public ActionResult Create([FromBody] CreatePlayerRequest request)
     {
-        try
+        var spelare = new Spelare
         {
-            var spelare = new Spelare
-            {
-                Id = request.Id,
-                Namn = request.Namn,
-                Tröjnummer = request.Tröjnummer,
-                Mål = request.Mål,
-                MatcherSpelade = request.MatcherSpelade
-            };
+            Id = request.Id,
+            Namn = request.Namn,
+            Tröjnummer = request.Tröjnummer,
+            Mål = request.Mål,
+            MatcherSpelade = request.MatcherSpelade
+        };
 
-            _service.LäggTillSpelare(spelare);
-            return CreatedAtAction(nameof(GetById), new { id = spelare.Id }, spelare); // HTTP 201
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message); // HTTP 400
-        }
+        _service.LäggTillSpelare(spelare);
+        return CreatedAtAction(nameof(GetById), new { id = spelare.Id }, spelare); // HTTP 201
     }
 
     // PUT /api/players/4
     [HttpPut("{id:int}")]
     public ActionResult Update(int id, [FromBody] UpdatePlayerRequest request)
     {
-        try
+        var spelare = new Spelare
         {
-            var spelare = new Spelare
-            {
-                Id = id,
-                Namn = request.Namn,
-                Tröjnummer = request.Tröjnummer,
-                Mål = request.Mål,
-                MatcherSpelade = request.MatcherSpelade
-            };
+            Id = id,
+            Namn = request.Namn,
+            Tröjnummer = request.Tröjnummer,
+            Mål = request.Mål,
+            MatcherSpelade = request.MatcherSpelade
+        };
 
-            bool updated = _service.UppdateraSpelare(spelare);
-            if (!updated)
-            {
-                return NotFound();
-            }
-
-            return NoContent(); // HTTP 204
-        }
-        catch (ArgumentException ex)
+        bool updated = _service.UppdateraSpelare(spelare);
+        if (!updated)
         {
-            return BadRequest(ex.Message);
+            return NotFound(new ApiError
+            {
+                Code = "not_found",
+                Message = $"Ingen spelare hittades med id {id}.",
+                TraceId = HttpContext.TraceIdentifier
+            });
         }
+
+        return NoContent(); // HTTP 204
     }
 
     // DELETE /api/players/haaland
     [HttpDelete("{namn}")]
     public ActionResult Delete(string namn)
     {
-        try
+        bool deleted = _service.TaBortSpelare(namn);
+        if (!deleted)
         {
-            bool deleted = _service.TaBortSpelare(namn);
-            if (!deleted)
+            return NotFound(new ApiError
             {
-                return NotFound();
-            }
+                Code = "not_found",
+                Message = $"Ingen spelare hittades med namn '{namn}'.",
+                TraceId = HttpContext.TraceIdentifier
+            });
+        }
 
-            return NoContent(); // HTTP 204
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return NoContent(); // HTTP 204
     }
 }
