@@ -1,3 +1,4 @@
+using Del2databasboll.Api.Contracts;
 using Del2databasboll.Models;
 using Del2databasboll.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -48,10 +49,19 @@ public class PlayersController : ControllerBase
 
     // POST /api/players
     [HttpPost]
-    public ActionResult Create([FromBody] Spelare spelare)
+    public ActionResult Create([FromBody] CreatePlayerRequest request)
     {
         try
         {
+            var spelare = new Spelare
+            {
+                Id = request.Id,
+                Namn = request.Namn,
+                Tröjnummer = request.Tröjnummer,
+                Mål = request.Mål,
+                MatcherSpelade = request.MatcherSpelade
+            };
+
             _service.LäggTillSpelare(spelare);
             return CreatedAtAction(nameof(GetById), new { id = spelare.Id }, spelare); // HTTP 201
         }
@@ -63,11 +73,19 @@ public class PlayersController : ControllerBase
 
     // PUT /api/players/4
     [HttpPut("{id:int}")]
-    public ActionResult Update(int id, [FromBody] Spelare spelare)
+    public ActionResult Update(int id, [FromBody] UpdatePlayerRequest request)
     {
         try
         {
-            spelare.Id = id;
+            var spelare = new Spelare
+            {
+                Id = id,
+                Namn = request.Namn,
+                Tröjnummer = request.Tröjnummer,
+                Mål = request.Mål,
+                MatcherSpelade = request.MatcherSpelade
+            };
+
             bool updated = _service.UppdateraSpelare(spelare);
             if (!updated)
             {
