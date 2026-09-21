@@ -132,6 +132,37 @@ public class SpelareRepository : ISpelarRepository
         };
     }
 
+    public List<Spelare> SökSpelareLista(string namn)
+    {
+        var lista = new List<Spelare>();
+
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT id, namn, trojnummer, mal, matcher_spelade
+            FROM spelare
+            WHERE LOWER(namn) LIKE LOWER($namn)
+            ORDER BY namn;";
+        command.Parameters.AddWithValue("$namn", $"%{namn}%");
+
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            lista.Add(new Spelare
+            {
+                Id = reader.GetInt32(0),
+                Namn = reader.GetString(1),
+                Tröjnummer = reader.GetInt32(2),
+                Mål = reader.GetInt32(3),
+                MatcherSpelade = reader.GetInt32(4)
+            });
+        }
+
+        return lista;
+    }
+
     public bool TaBortSpelare(string namn)
     {
         using var connection = new SqliteConnection(_connectionString);

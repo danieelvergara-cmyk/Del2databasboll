@@ -41,6 +41,12 @@ curl http://localhost:5072/api/players/4
 ```
 
 ```bash
+# zsh-tips: sätt URL i enkla citattecken när du använder ?name=...
+curl 'http://localhost:5072/api/players/search?name=haa'
+curl 'http://localhost:5072/api/players/search?name='
+```
+
+```bash
 curl -X POST http://localhost:5072/api/players \
   -H "Content-Type: application/json" \
   -d '{"id":12,"namn":"Lina","tröjnummer":11,"mål":5,"matcherSpelade":10}'
@@ -76,3 +82,5 @@ curl -X DELETE http://localhost:5072/api/players/Lina
 - `Endpoint`: en specifik route, t.ex. `GET /api/players`.
 - `Dependency Injection` (grundnivå): ASP.NET Core skapar beroenden åt oss via `builder.Services`.
 - `HTTP-statuskoder`: t.ex. `200`, `201`, `204`, `400`, `404`.
+- `Query parameter`: filtrering i URL, t.ex. `?name=haa`.
+- `Enhetlig felmodell`: API-fel returneras med samma JSON-fält (`code`, `message`, `traceId`).

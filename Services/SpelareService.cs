@@ -43,6 +43,16 @@ public class SpelareService : ISpelareService
         return _repository.SökSpelare(namn.Trim());
     }
 
+    public List<Spelare> SökSpelareLista(string namn)
+    {
+        if (string.IsNullOrWhiteSpace(namn))
+        {
+            throw new ArgumentException("Söktext får inte vara tom.");
+        }
+
+        return _repository.SökSpelareLista(namn.Trim());
+    }
+
     public bool TaBortSpelare(string namn)
     {
         if (string.IsNullOrWhiteSpace(namn))

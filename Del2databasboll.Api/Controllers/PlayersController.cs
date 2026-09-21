@@ -27,6 +27,14 @@ public class PlayersController : ControllerBase
         return Ok(players); // HTTP 200
     }
 
+    // GET /api/players/search?name=haal
+    [HttpGet("search")]
+    public ActionResult<List<Spelare>> SearchByName([FromQuery] string? name)
+    {
+        var players = _service.SökSpelareLista(name ?? string.Empty);
+        return Ok(players); // HTTP 200, tom lista om ingen match
+    }
+
     // GET /api/players/4
     [HttpGet("{id:int}")]
     public ActionResult<Spelare> GetById(int id)

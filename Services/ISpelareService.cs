@@ -8,6 +8,7 @@ public interface ISpelareService
     List<Spelare> HämtaAlla();
     Spelare? HämtaSpelareById(int id);
     Spelare? SökSpelare(string namn);
+    List<Spelare> SökSpelareLista(string namn);
     bool TaBortSpelare(string namn);
     bool UppdateraSpelare(Spelare spelare);
 }
