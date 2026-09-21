@@ -14,7 +14,7 @@ public class SpelareService : ISpelareService
 
     public void LäggTillSpelare(Spelare spelare)
     {
-        spelare.Namn = spelare.Namn.Trim();
+        ValideraSpelare(spelare);
         _repository.LäggTillSpelare(spelare);
     }
 
@@ -23,19 +23,68 @@ public class SpelareService : ISpelareService
         return _repository.HämtaAlla();
     }
 
+    public Spelare? HämtaSpelareById(int id)
+    {
+        if (id <= 0)
+        {
+            throw new ArgumentException("Id måste vara större än 0.");
+        }
+
+        return _repository.HämtaSpelareById(id);
+    }
+
     public Spelare? SökSpelare(string namn)
     {
+        if (string.IsNullOrWhiteSpace(namn))
+        {
+            throw new ArgumentException("Namn får inte vara tomt.");
+        }
+
         return _repository.SökSpelare(namn.Trim());
     }
 
     public bool TaBortSpelare(string namn)
     {
+        if (string.IsNullOrWhiteSpace(namn))
+        {
+            throw new ArgumentException("Namn får inte vara tomt.");
+        }
+
         return _repository.TaBortSpelare(namn.Trim());
     }
 
     public bool UppdateraSpelare(Spelare spelare)
     {
-        spelare.Namn = spelare.Namn.Trim();
+        ValideraSpelare(spelare);
         return _repository.UppdateraSpelare(spelare);
+    }
+
+    private static void ValideraSpelare(Spelare spelare)
+    {
+        if (spelare.Id <= 0)
+        {
+            throw new ArgumentException("Id måste vara större än 0.");
+        }
+
+        spelare.Namn = spelare.Namn.Trim();
+        if (string.IsNullOrWhiteSpace(spelare.Namn))
+        {
+            throw new ArgumentException("Namn får inte vara tomt.");
+        }
+
+        if (spelare.Tröjnummer <= 0)
+        {
+            throw new ArgumentException("Tröjnummer måste vara större än 0.");
+        }
+
+        if (spelare.Mål < 0)
+        {
+            throw new ArgumentException("Antal mål kan inte vara negativt.");
+        }
+
+        if (spelare.MatcherSpelade < 0)
+        {
+            throw new ArgumentException("Antal matcher kan inte vara negativt.");
+        }
     }
 }

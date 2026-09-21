@@ -21,9 +21,10 @@ class Program
             Console.WriteLine("1. Lägg till spelare");
             Console.WriteLine("2. Visa spelare");
             Console.WriteLine("3. Sök spelare");
-            Console.WriteLine("4. Ta bort spelare");
-            Console.WriteLine("5. Uppdatera spelare");
-            Console.WriteLine("6. Avsluta");
+            Console.WriteLine("4. Hämta spelare via id");
+            Console.WriteLine("5. Ta bort spelare");
+            Console.WriteLine("6. Uppdatera spelare");
+            Console.WriteLine("7. Avsluta");
 
             if (!int.TryParse(Console.ReadLine(), out int val))
             {
@@ -34,26 +35,45 @@ class Program
             switch (val)
             {
                 case 1:
-                    LäggTillSpelare();
+                    KörSäkert(LäggTillSpelare);
                     break;
                 case 2:
-                    VisaSpelare();
+                    KörSäkert(VisaSpelare);
                     break;
                 case 3:
-                    SökSpelare();
+                    KörSäkert(SökSpelare);
                     break;
                 case 4:
-                    TaBortSpelare();
+                    KörSäkert(HämtaSpelareViaId);
                     break;
                 case 5:
-                    UppdateraSpelare();
+                    KörSäkert(TaBortSpelare);
                     break;
                 case 6:
+                    KörSäkert(UppdateraSpelare);
+                    break;
+                case 7:
                     return;
                 default:
-                    Console.WriteLine("Välj ett tal mellan 1-6");
+                    Console.WriteLine("Välj ett tal mellan 1-7");
                     break;
             }
+        }
+    }
+
+    static void KörSäkert(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Valideringsfel: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Något gick fel: {ex.Message}");
         }
     }
 
@@ -107,6 +127,21 @@ class Program
         string namn = Console.ReadLine() ?? string.Empty;
 
         var spelare = service.SökSpelare(namn);
+        if (spelare == null)
+        {
+            Console.WriteLine("Spelare hittades inte.");
+            return;
+        }
+
+        spelare.SkrivInfo();
+    }
+
+    static void HämtaSpelareViaId()
+    {
+        Console.Write("Id att hämta: ");
+        int id = LäsHeltal();
+
+        var spelare = service.HämtaSpelareById(id);
         if (spelare == null)
         {
             Console.WriteLine("Spelare hittades inte.");

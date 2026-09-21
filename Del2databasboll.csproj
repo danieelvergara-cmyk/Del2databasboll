@@ -9,4 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Del2databasboll.Api/**/*.cs" />
+    <None Remove="Del2databasboll.Api/**/*.csproj" />
+  </ItemGroup>
 </Project>

@@ -74,6 +74,35 @@ public class SpelareRepository : ISpelarRepository
         return lista;
     }
 
+    public Spelare? HämtaSpelareById(int id)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT id, namn, trojnummer, mal, matcher_spelade
+            FROM spelare
+            WHERE id = $id
+            LIMIT 1;";
+        command.Parameters.AddWithValue("$id", id);
+
+        using var reader = command.ExecuteReader();
+        if (!reader.Read())
+        {
+            return null;
+        }
+
+        return new Spelare
+        {
+            Id = reader.GetInt32(0),
+            Namn = reader.GetString(1),
+            Tröjnummer = reader.GetInt32(2),
+            Mål = reader.GetInt32(3),
+            MatcherSpelade = reader.GetInt32(4)
+        };
+    }
+
     public Spelare? SökSpelare(string namn)
     {
         using var connection = new SqliteConnection(_connectionString);

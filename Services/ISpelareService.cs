@@ -6,6 +6,7 @@ public interface ISpelareService
 {
     void LäggTillSpelare(Spelare spelare);
     List<Spelare> HämtaAlla();
+    Spelare? HämtaSpelareById(int id);
     Spelare? SökSpelare(string namn);
     bool TaBortSpelare(string namn);
     bool UppdateraSpelare(Spelare spelare);
